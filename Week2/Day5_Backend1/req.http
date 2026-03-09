@@ -1,0 +1,60 @@
+### Read all users
+GET http://localhost:3001/user-api/users
+
+### Read a user by id
+GET http://localhost:3001/user-api/users/3
+
+###Create new user
+POST http://localhost:3001/user-api/users
+Content-Type: application/json
+
+{
+    "id":1,
+    "name":"ravi",
+    "age":20
+}
+
+### 
+PUT http://localhost:3001/user-api/users
+Content-Type: application/json
+
+{
+    "id":1,
+    "name":"bhanu",
+    "age":22
+}
+
+
+### 
+DELETE http://localhost:3001/user-api/users/1
+
+###Product
+GET  http://localhost:3001/product-api/products
+
+###Read products by brand
+GET  http://localhost:3001/product-api/products?brand=dell
+
+###Create new product
+POST http://localhost:3001/product-api/products
+Content-Type: application/json
+
+{
+    "id":1,
+    "name":"laptop",
+    "brand":"dell",
+    "price":50000
+}
+
+###Update a product
+PUT http://localhost:3001/product-api/products
+Content-Type: application/json
+
+{
+    "id":1,
+    "name":"laptop",
+    "brand":"dell",
+    "price":55000
+}
+
+###Delete a product
+DELETE http://localhost:3001/product-api/products/2
