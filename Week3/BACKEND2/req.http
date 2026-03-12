@@ -1,0 +1,79 @@
+### Read all users
+GET http://localhost:4000/user-api/users
+cookie:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpc2hhbEBnbWFpbC5jb20iLCJpYXQiOjE3NzMyOTU5ODMsImV4cCI6MTc3MzI5OTU4M30.t0BkahKsMeEAwjEGBfZELv3OXg0hPIvmiPueegMl5BQ
+### Login (get auth cookie)
+POST http://localhost:4000/user-api/login
+Content-Type: application/json
+
+{
+    "email":"vishal@gmail.com",
+    "password":"vishal"
+}
+
+### Read a user by id
+GET  http://localhost:4000/user-api/user
+Cookie: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJoYW51MUBnbWFpbC5jb20iLCJpYXQiOjE3NzMyOTA4NzQsImV4cCI6MTc3MzI5NDQ3NH0.meFfH2Pzu3mPE7-45PUu5vKe9VM0FSZkuINIKErbx5E
+
+###Create new user
+POST http://localhost:4000/user-api/users
+Content-Type: application/json
+
+{
+    "username":"vishal",
+    "password":"vishal",
+    "email":"vishal@gmail.com",
+    "age":21
+}
+
+
+### 
+PUT http://localhost:4000/user-api/users/69aa736f6663584b60c99f8d
+Content-Type: application/json
+
+{
+    "username":"bhanu",
+    "password":"bhanukumar",
+    "email":"bhanukumar@gmail.com",
+    "age":21
+}
+
+
+
+### 
+DELETE http://localhost:4000/user-api/users/69aa736f6663584b60c99f8d
+
+
+### Add product to user cart
+PUT http://localhost:4000/user-api/cart/product-id/69b24b0333398a4eb903281c
+
+
+
+
+###Product
+GET  http://localhost:4000/product-api/products
+###Get product by id
+GET  http://localhost:4000/product-api/products/69b24a6e33398a4eb9032817
+###Create new product
+POST http://localhost:4000/product-api/products
+Content-Type: application/json
+
+{
+    "productId": 2,
+    "name":"Surface",
+    "price":47000,
+    "brand":"Microsoft"
+}
+
+###Update a product
+PUT http://localhost:4000/product-api/products/1
+Content-Type: application/json
+
+{
+    "productId":1,
+    "name":"laptop",
+    "price":50000,
+    "brand": "Acme"
+}
+
+###Delete a product
+DELETE http://localhost:4000/product-api/products/69b24a6e33398a4eb9032817
