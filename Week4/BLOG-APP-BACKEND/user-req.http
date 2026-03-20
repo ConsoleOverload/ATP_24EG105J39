@@ -1,0 +1,142 @@
+### Register User
+POST http://localhost:4001/auth/users
+Content-Type: application/json
+
+{
+    "firstName":"admin",
+    "lastName":"PQR",
+    "email":"admin@gmail.com",
+    "password":"admin",
+    "role":"ADMIN",
+    "profileImageUrl":"http://image.com/profile.png",
+    "isUserActive":"true"
+    
+}
+###Get users
+GET http://localhost:4001/auth/users
+
+### User login
+POST http://localhost:4001/auth/login
+Content-Type: application/json
+
+{
+    "email":"kaustubh@gmail.com",
+    "password":"Kaustubh"
+}
+
+### User logout
+GET http://localhost:4001/auth/logout
+
+### Create new Article
+POST http://localhost:4001/author-api/article
+Content-Type: application/json
+
+{
+    "author":"69b3a60d74399ab8a010a46b",
+    "title":"Article-4 by Author 1",
+    "category":"web dev",
+    "content":"test article on web tech"
+    
+}
+
+### Read own articles
+GET http://localhost:4001/author-api/articles
+
+### update article by author
+PUT http://localhost:4001/author-api/articles
+Content-Type: application/json
+
+{
+    "articleId":"69b3aac1876c237f9a0e59a1",
+    "title":"Article3 by Author 1",
+    "category":"AI-1",
+    "content":"test article on AI-1"   
+}
+
+### Delete/Restore an Article by Article ID (soft delete)
+PATCH http://localhost:4001/author-api/articles
+Content-Type: application/json
+
+{
+    "articleId":"69b3aac1876c237f9a0e59a1",
+    "isArticleActive":false
+}
+
+### Read articles of all authors
+GET http://localhost:4001/user-api/articles
+
+### Add comment by user to an article
+PUT http://localhost:4001/user-api/articles
+Content-Type: application/json
+
+{
+    "articleId":"69b3aac1876c237f9a0e59a1",
+    "comment": "This is a useful article"
+}
+
+
+
+
+### Read all users & authors (email)
+
+### Block or acticate user or author
+
+
+### Change Password
+PUT http://localhost:4001/auth/password
+Content-Type: "application/json"
+
+{
+    "currentPassword":"Kaustubh",
+    "newPassword":"kaustubh",
+}
+
+
+### Admin Login
+POST http://localhost:4001/auth/login
+Content-Type: application/json
+
+{
+    "email":"admin@gmail.com",
+    "password":"admin"
+}
+
+
+### Change Password
+PUT http://localhost:4001/auth/password
+Content-Type: application/json
+
+{
+    "currentPassword":"Kaustubh",
+    "newPassword":"Kaustubh123"
+
+}
+
+
+
+
+
+
+
+### 2. GET ALL USERS
+GET http://localhost:4001/admin-api/users
+
+
+
+### 3. ACTIVATE / DEACTIVATE USER
+PUT http://localhost:4001/admin-api/users/69b390a6ef2fe98efb2554ef
+Content-Type: application/json
+
+{
+  "isUserActive": false
+}
+
+
+
+### 4. GET ALL ARTICLES
+GET http://localhost:5000/admin-api/articles
+
+
+
+### 5. DELETE ARTICLE
+DELETE http://localhost:4001/admin-api/articles/69b3aac1876c237f9a0e59a1
