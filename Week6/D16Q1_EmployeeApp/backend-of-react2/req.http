@@ -1,0 +1,29 @@
+### Adding a new Employee
+POST http://localhost:4002/employee-api/create
+Content-Type: application/json
+
+{
+    "name":"Ravi",
+    "email":"Ravi@gmail.com",
+    "mobile":9999991,
+    "designation":"CEO",
+    "companyName":"xyz"
+}
+
+### Get all users
+GET http://localhost:4002/employee-api/get-all
+
+### Update users
+PUT http://localhost:4002/employee-api/edit/69ca29c699bc791e35d68830
+Content-Type: application/json
+
+{
+    "name":"Ravi",
+    "email":"Ravi@gmail.com",
+    "mobile":9999991,
+    "designation":"VP",
+    "companyName":"xyz"
+}
+
+###Delete employee
+DELETE http://localhost:4002/employee-api/delete/69ca29c699bc791e35d68830
