@@ -1,45 +1,54 @@
 import exp from "express";
 import { config } from "dotenv";
 import { connect } from "mongoose";
-import { userApp } from "./APIs/UserAPI.js";
-import { authorApp } from "./APIs/AuthorAPI.js";
-import { adminApp } from "./APIs/AdminAPI.js";
-import { commonApp } from "./APIs/CommonAPI.js";
+import { userApp } from "./apis/user-api.js";
+import { authorApp } from "./apis/author-api.js";
+import { adminApp } from "./apis/admin-api.js";
+import { commonApp } from "./apis/common-api.js";
 import cookieParser from "cookie-parser";
-import cors from 'cors'
+import cors from "cors";
+const app = exp();
 config();
 
-//create express app
-const app = exp();
-//enable cors
-app.use(cors({
-  origin:['http://localhost:5173'],
-  credentials:true
-}))
-//add cookie parser middeleware
-app.use(cookieParser())
-//body parser middleware
+app.get("/health", (req, res) => res.send("OK"));
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && (origin.includes("vercel.app") || origin.includes("localhost"))) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+app.use(cookieParser());
 app.use(exp.json());
-//path level middlewares
+
+//path level middleware
 app.use("/user-api", userApp);
 app.use("/author-api", authorApp);
 app.use("/admin-api", adminApp);
 app.use("/auth", commonApp);
 
-//connect to db
+//Connect to DB
 const connectDB = async () => {
   try {
     await connect(process.env.DB_URL);
-    console.log("DB server connected");
-    //assign port
-    const port = process.env.PORT || 4001;
-    app.listen(port, () => console.log(`server listening on ${port}..`));
+    console.log("DB Connected");
   } catch (err) {
-    console.log("err in db connect", err);
+    console.log("Error in DB Connect", err);
   }
 };
-
 connectDB();
+
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log(`server listening on ${port}`));
 
 //to handle invalid path
 app.use((req, res, next) => {
@@ -47,30 +56,22 @@ app.use((req, res, next) => {
   res.status(404).json({ message: `path ${req.url} is invalid` });
 });
 
-//Error handling middleware
+//To handle errors
 app.use((err, req, res, next) => {
-  console.log("error is ",err)
-  console.log("Full error:", JSON.stringify(err, null, 2));
+  console.log(err.name);
+  console.log(err);
   //ValidationError
   if (err.name === "ValidationError") {
-    return res.status(400).json({ message: "error occurred", error: err.message });
+    return res
+      .status(400)
+      .json({ message: "Error occured", error: err.message });
   }
   //CastError
   if (err.name === "CastError") {
-    return res.status(400).json({ message: "error occurred", error: err.message });
+    return res
+      .status(400)
+      .json({ message: "Error occured", error: err.message });
   }
-  const errCode = err.code ?? err.cause?.code ?? err.errorResponse?.code;
-  const keyValue = err.keyValue ?? err.cause?.keyValue ?? err.errorResponse?.keyValue;
-
-  if (errCode === 11000) {
-    const field = Object.keys(keyValue)[0];
-    const value = keyValue[field];
-    return res.status(409).json({
-      message: "error occurred",
-      error: `${field} "${value}" already exists`,
-    });
-  }
-
-  //send server side error
-  res.status(500).json({ message: "error occurred", error: "Server side error" });
+  //Send server side errors
+  res.status(500).json({ message: "Error occured", error: err.message });
 });

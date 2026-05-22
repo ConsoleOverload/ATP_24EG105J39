@@ -8,7 +8,7 @@ const commentSchema = new Schema({
   },
   comment: {
     type: String,
-    required:[true,"Enter a comment"],
+    required: [true, "Enter a comment"],
   },
 });
 
@@ -17,7 +17,7 @@ const articleSchema = new Schema(
     author: {
       type: Types.ObjectId,
       ref: "user",
-      required: [true, "Author ID is required"],
+      required: [true, "Author id is required"],
     },
     title: {
       type: String,
@@ -32,23 +32,17 @@ const articleSchema = new Schema(
       required: [true, "Content is required"],
     },
     comments: [{ type: commentSchema, default: [] }],
-    isArticleActive: {
+    isActive: {
       type: Boolean,
       default: true,
     },
   },
   {
-    versionKey: false,
     timestamps: true,
+    versionKey: false,
     strict: "throw",
   },
 );
 
 //create article model
-export const ArticleModel = model("article", articleSchema);
-
-// "mbsdf6sdf6df6sd6fs6dfs6df6sd"
-//ObjectId("bf7f7f7f7f7f7f77f7f")
-
-//{ comment:"",user:""}
-//find().populate("cart.product","pid productName brand")
+export const articleModel = model("article", articleSchema);

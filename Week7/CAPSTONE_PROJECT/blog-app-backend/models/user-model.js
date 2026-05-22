@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-
 const userSchema = new Schema(
   {
     firstName: {
@@ -11,8 +10,8 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
-      required: [true, "Email required"],
-      unique: [true, "Email already existed"],
+      required: [true, "Email is required"],
+      unique: [true, "Email already exits"],
     },
     password: {
       type: String,
@@ -21,15 +20,15 @@ const userSchema = new Schema(
     role: {
       type: String,
       enum: ["USER", "AUTHOR", "ADMIN"],
-      required: [true, "Invalid role"],
+      required: [true, "{Value} is Invalid role"],
     },
     profileImageUrl: {
       type: String,
     },
-    isUserActive:{
-        type:Boolean,
-        default:true
-    }
+    isUserActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
@@ -38,5 +37,5 @@ const userSchema = new Schema(
   },
 );
 
-//create model
-export const UserModel = model("user", userSchema);
+//Create Model
+export const userModel = model("user", userSchema);

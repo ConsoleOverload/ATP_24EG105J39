@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
+import BASE_URL from "../config";
+
 
 export const useAuth = create((set) => ({
   currentUser: null,
@@ -10,11 +12,19 @@ export const useAuth = create((set) => ({
     // const { role, ...userCredObj } = userCredWithRole;
     try {
       //set loading true
-      set({ loading: true, currentUser: null, isAuthenticated: false, error: null });
+      set({
+        loading: true,
+        currentUser: null,
+        isAuthenticated: false,
+        error: null,
+      });
       //make api call
-      let res = await axios.post("http://localhost:4001/auth/login", userCred, { withCredentials: true });
+      let res = await axios.post(`${BASE_URL}/auth/login`, userCred, {
+        withCredentials: true,
+      });
       //update state
       if (res.status === 200) {
+        localStorage.setItem("hasAuthToken", "true");
         set({
           currentUser: res.data?.payload,
           loading: false,
@@ -37,9 +47,12 @@ export const useAuth = create((set) => ({
     try {
       //set loading state
       //make logout api req
-      let res = await axios.get("http://localhost:4001/auth/logout", { withCredentials: true });
+      let res = await axios.get(`${BASE_URL}/auth/logout`, {
+        withCredentials: true,
+      });
       //update state
       if (res.status === 200) {
+        localStorage.removeItem("hasAuthToken");
         set({
           currentUser: null,
           isAuthenticated: false,
@@ -59,17 +72,7 @@ export const useAuth = create((set) => ({
   // restore login
   checkAuth: async () => {
     try {
-      set({ loading: true });
-      const res = await axios.get("http://localhost:4001/auth/check-auth", { withCredentials: true });
-
-      set({
-        currentUser: res.data.payload,
-        isAuthenticated: true,
-        loading: false,
-      });
-    } catch (err) {
-      // If user is not logged in → do nothing
-      if (err.response?.status === 401) {
+      if (!localStorage.getItem("hasAuthToken")) {
         set({
           currentUser: null,
           isAuthenticated: false,
@@ -77,7 +80,29 @@ export const useAuth = create((set) => ({
         });
         return;
       }
+      set({ loading: true });
+      const res = await axios.get(`${BASE_URL}/auth/check-auth`, {
+        withCredentials: true,
+        validateStatus: (status) => status < 500,
+      });
 
+      if (res.status === 200) {
+        set({
+          currentUser: res.data.payload,
+          isAuthenticated: true,
+          loading: false,
+        });
+        return;
+      }
+
+      // Not logged in (401)
+      set({
+        currentUser: null,
+        isAuthenticated: false,
+        loading: false,
+      });
+      localStorage.removeItem("hasAuthToken");
+    } catch (err) {
       // other errors
       console.error("Auth check failed:", err);
       set({ loading: false });

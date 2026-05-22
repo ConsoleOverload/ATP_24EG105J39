@@ -14,8 +14,11 @@ import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router";
 import { useState } from "react";
 import axios from "axios";
+import BASE_URL from "../config";
+
 
 function Register() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -23,35 +26,32 @@ function Register() {
   } = useForm();
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
-  const [preview, setPriview] = useState(null);
-  const navigate = useNavigate();
+  const [preview, setPreview] = useState(null);
 
   //When user registration submitted
   const onUserRegister = async (userObj) => {
     console.log(userObj);
-    let {profileImageUrl}=userObj
-    // file + userObj -->FormData
-    //create ForMData object
+    //file + userObj ---> FormData
+    //create FormData object
     const formData = new FormData();
-    //add all user properties and file to this formdata object
-    formData.append("role", userObj.role);
+    //add all user properties and file to this formData Object
     formData.append("firstName", userObj.firstName);
     formData.append("lastName", userObj.lastName);
     formData.append("email", userObj.email);
     formData.append("password", userObj.password);
+    formData.append("role", userObj.role);
     //Append if image is exists
-    if (profileImageUrl?.[0]) {
-      formData.append("profileImageUrl", profileImageUrl[0]);
+    if (userObj.profileImageUrl?.[0]) {
+      formData.append("profileImageUrl", userObj.profileImageUrl[0]);
     }
-   console.log(profileImageUrl)
     try {
-      //start loading
       setLoading(true);
-      //make HTTP POST req to create User in backend
-      let res = await axios.post("http://localhost:4001/auth/users", formData,{withCredentials:true});
-
+      const res = await axios.post(
+        `${BASE_URL}/auth/users`,
+        formData,
+        { withCredentials: true },
+      );
       if (res.status === 201) {
-        //navigate to Login
         navigate("/login");
       }
     } catch (err) {
@@ -63,7 +63,9 @@ function Register() {
   };
 
   return (
-    <div className={`${pageBackground} flex items-center justify-center py-16 px-4`}>
+    <div
+      className={`${pageBackground} flex items-center justify-center py-16 px-4`}
+    >
       <div className={formCard}>
         <h2 className={formTitle}>Create an Account</h2>
 
@@ -127,7 +129,9 @@ function Register() {
                   validate: (v) => v.trim().length > 0 || "Cannot be empty",
                 })}
               />
-              {errors.firstName && <p className={errorClass}>{errors.firstName.message}</p>}
+              {errors.firstName && (
+                <p className={errorClass}>{errors.firstName.message}</p>
+              )}
             </div>
 
             <div className="flex-1">
@@ -143,7 +147,9 @@ function Register() {
                   },
                 })}
               />
-              {errors.lastName && <p className={errorClass}>{errors.lastName.message}</p>}
+              {errors.lastName && (
+                <p className={errorClass}>{errors.lastName.message}</p>
+              )}
             </div>
           </div>
 
@@ -158,7 +164,9 @@ function Register() {
                 required: "Email is required",
               })}
             />
-            {errors.email && <p className={errorClass}>{errors.email.message}</p>}
+            {errors.email && (
+              <p className={errorClass}>{errors.email.message}</p>
+            )}
           </div>
 
           {/* PASSWORD */}
@@ -172,7 +180,9 @@ function Register() {
                 required: "Password is required",
               })}
             />
-            {errors.password && <p className={errorClass}>{errors.password.message}</p>}
+            {errors.password && (
+              <p className={errorClass}>{errors.password.message}</p>
+            )}
           </div>
 
           {/* PROFILE IMAGE */}
@@ -182,32 +192,41 @@ function Register() {
             <input
               type="file"
               className={inputClass}
-              accept="image/png, image/jpeg"
+              accept="image/png,image/jpeg"
               {...register("profileImageUrl", {
                 validate: {
                   fileType: (files) => {
                     if (!files?.[0]) return true;
-                    return ["image/png", "image/jpeg"].includes(files[0].type) || "Only JPG/PNG allowed";
+                    return (
+                      ["image/png", "image/jpeg"].includes(files[0].type) ||
+                      "Only JPG/PNG allowed"
+                    );
                   },
                   fileSize: (files) => {
                     if (!files?.[0]) return true;
-                    return files[0].size <= 2 * 1024 * 1024 || "MAx size 2MB";
+                    return files[0].size <= 2 * 1024 * 1024 || "Max size 2MB";
                   },
                 },
               })}
               onChange={(event) => {
-                let file = event.target.files[0];
+                const file = event.target.files[0];
                 if (file) {
-                  setPriview(URL.createObjectURL(file));
+                  setPreview(URL.createObjectURL(file));
                 }
               }}
             />
 
-            {errors.profileImageUrl && <p className={errorClass}>{errors.profileImageUrl.message}</p>}
-            {/* image preview */}
+            {errors.profileImageUrl && (
+              <p className={errorClass}>{errors.profileImageUrl.message}</p>
+            )}
+            {/* Image preview */}
             {preview && (
               <div className="mt-3 flex justify-center">
-                <img src={preview} alt="" className="w-24 h-24 rounded-full object-cover" />
+                <img
+                  src={preview}
+                  alt=""
+                  className="w-24 h-24 overflow-hidden rounded-full ring-2"
+                />
               </div>
             )}
           </div>

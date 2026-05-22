@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import axios from "axios";
+import BASE_URL from "../config";
 
 
 import {
@@ -33,23 +34,21 @@ function EditArticle() {
   useEffect(() => {
     if (!article) return;
 
-     setValue("title", article.title);
-     setValue("category", article.category);
-     setValue("content", article.content);
-  }, [article]);
+    setValue("title", article.title);
+    setValue("category", article.category);
+    setValue("content", article.content);
+  }, [article, setValue]);
 
-  const updateArticle = async (modifiedArticle) => {
-  
-    //add articleId to modified article
-    modifiedArticle.articleId=article._id;
-    //make PUT req to update article
-    let res=await axios.put("http://localhost:4001/author-api/articles",
-      modifiedArticle,
-      {withCredentials:true})
-    //naviagte to articleById component
-   if(res.status===200){
-    navigate(`/article/${article._id}`,{state:res.data.payload})
-   }
+  const updateArticle = async (modifedArticle) => {
+    modifedArticle.articleId = article._id;
+    const res = await axios.put(
+      `${BASE_URL}/author-api/articles`,
+      modifedArticle,
+      { withCredentials: true },
+    );
+    if (res.status === 200) {
+      navigate(`/article/${article._id}`, { state: res.data.payload });
+    }
   };
 
   return (
@@ -61,7 +60,10 @@ function EditArticle() {
         <div className={formGroup}>
           <label className={labelClass}>Title</label>
 
-          <input className={inputClass} {...register("title", { required: "Title required" })} />
+          <input
+            className={inputClass}
+            {...register("title", { required: "Title required" })}
+          />
 
           {errors.title && <p className={errorClass}>{errors.title.message}</p>}
         </div>
@@ -70,7 +72,10 @@ function EditArticle() {
         <div className={formGroup}>
           <label className={labelClass}>Category</label>
 
-          <select className={inputClass} {...register("category", { required: "Category required" })}>
+          <select
+            className={inputClass}
+            {...register("category", { required: "Category required" })}
+          >
             <option value="">Select category</option>
             <option value="technology">Technology</option>
             <option value="programming">Programming</option>
@@ -78,16 +83,24 @@ function EditArticle() {
             <option value="web-development">Web Development</option>
           </select>
 
-          {errors.category && <p className={errorClass}>{errors.category.message}</p>}
+          {errors.category && (
+            <p className={errorClass}>{errors.category.message}</p>
+          )}
         </div>
 
         {/* Content */}
         <div className={formGroup}>
           <label className={labelClass}>Content</label>
 
-          <textarea rows="14" className={inputClass} {...register("content", { required: "Content required" })} />
+          <textarea
+            rows="14"
+            className={inputClass}
+            {...register("content", { required: "Content required" })}
+          />
 
-          {errors.content && <p className={errorClass}>{errors.content.message}</p>}
+          {errors.content && (
+            <p className={errorClass}>{errors.content.message}</p>
+          )}
         </div>
 
         <button className={submitBtn}>Update Article</button>

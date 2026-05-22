@@ -1,35 +1,29 @@
-import jwt from "jsonwebtoken";
-import { config } from "dotenv";
-import { UserModel } from "../models/UserModel.js";
-
-const { verify } = jwt;
-config();
+import jwt from 'jsonwebtoken'
+import { config } from 'dotenv'
+config()
+const { verify } = jwt
 
 export const verifyToken = (...allowedRoles) => {
-  return async (req, res, next) => {
+  return (req, res, next) => {
     try {
-      const token = req.cookies?.token;
-
+      //get token from cookie
+      const token = req.cookies?.token
+      //check token existed or not
       if (!token) {
-        return res.status(401).json({ message: "Please login first" });
+        return res.status(401).json({ message: 'Please Login first' })
       }
+      //validate token
+      let decodedToken = verify(token, process.env.SECRET_KEY)
 
-      let decodedToken = verify(token, process.env.SECRET_KEY);
-
-      const user = await UserModel.findById(decodedToken.id);
-
-      if (!user || !user.isUserActive) {
-        return res.status(403).json({ message: "Account is blocked" });
-      }
-
+      //check the role is same as role in decodedToken
       if (!allowedRoles.includes(decodedToken.role)) {
-        return res.status(403).json({ message: "Not authorized" });
+        return res.status(403).json({ message: 'You are not authorized' })
       }
-
-      req.user = decodedToken;
-      next();
+      //add decoded token
+      req.user = decodedToken
+      next()
     } catch (err) {
-      res.status(401).json({ message: "Invalid token" });
+      res.status(401).json({ message: 'Invalid token' })
     }
-  };
-};
+  }
+}
