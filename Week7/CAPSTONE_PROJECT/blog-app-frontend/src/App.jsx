@@ -7,7 +7,7 @@ import UserProfile from './components/UserProfile'
 import AuthorProfile from './components/AuthorProfile'
 import AdminProfile from './components/AdminProfile'
 import Articles from './components/Articles'
-import ArticleById from './components/ArticleById'
+import ArticleByID from './components/ArticleByID'
 import WriteArticles from './components/WriteArticles'
 import AuthorArticles from './components/AuthorArticles'
 import UserList from './components/UserList'
@@ -95,7 +95,7 @@ function App() {
         },
         {
           path: 'article/:id',
-          element: <ArticleById />
+          element: <ArticleByID />
         },
         {
           path: 'edit-article',
