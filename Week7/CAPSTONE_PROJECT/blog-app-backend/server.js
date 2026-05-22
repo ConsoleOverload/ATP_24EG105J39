@@ -12,22 +12,26 @@ config();
 
 app.get("/health", (req, res) => res.send("OK"));
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (origin && (origin.includes("vercel.app") || origin.includes("localhost"))) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
-  
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://capstone-project-mern-j39-2o9eblyr4-kaustubhs-projects-193f3136.vercel.app"
+];
 
-app.use(cookieParser());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (mobile apps/postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);app.use(cookieParser());
 app.use(exp.json());
 
 //path level middleware
