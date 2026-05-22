@@ -4,7 +4,7 @@ import { UserModel } from '../models/UserModel.js'
 import { ProductModel } from '../models/productModel.js'
 import { hash,compare } from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { verifyToken } from '../middleware/verifyToken.js' 
+import { verifyToken } from '../middleware/VerifyToken.js' 
 import {config} from 'dotenv'
 const {sign}=jwt
 export const userApp=exp.Router()

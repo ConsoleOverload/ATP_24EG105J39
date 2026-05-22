@@ -1,5 +1,5 @@
 import exp from "express";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifyToken } from "../middlewares/VerifyToken.js";
 import { userModel } from "../models/user-model.js";
 import { articleModel } from "../models/article-model.js";
 

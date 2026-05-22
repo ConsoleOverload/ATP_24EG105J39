@@ -2,7 +2,7 @@ import exp from "express";
 import { userModel } from "../models/user-model.js";
 import { compare, hash } from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifyToken } from "../middlewares/VerifyToken.js";
 const { sign } = jwt;
 export const commonApp = exp.Router();
 import { upload } from "../config/multer.js";
