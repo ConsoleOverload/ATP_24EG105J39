@@ -14,7 +14,7 @@ app.get("/health", (req, res) => res.send("OK"));
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://capstone-project-mern-j39-2o9eblyr4-kaustubhs-projects-193f3136.vercel.app"
+  "https://blog-app-j39-hxv2qg13v-kaustubhs-projects-193f3136.vercel.app/"
 ];
 
 app.use(
